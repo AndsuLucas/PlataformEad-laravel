@@ -11,6 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Auth::routes();
+
+/*home*/
+
+Route::get('/', 'HomeController@index')->name('home');
+
+/*endhome*/
+
+/*profile*/
+
+Route::get('/profile/{user}', 'UserController@userProfile' )->where('user', '[0-9]+');
+Route::get('/profile/register', 'UserController@returnCreateUserProfileForm');
+Route::post('/profile/create', 'UserController@createUserProfile');
+/*endprofile*/

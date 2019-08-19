@@ -1,43 +1,51 @@
 <?php
 
-
 namespace Tests\Feature;
 
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
-
-    public function testCreateUser()
-    {
-        
-        \App\User::create([
-             'name'     => 'Admin User',
-             'email'    => 'admin@admin.com',
-             'password' =>  \bcrypt(12345) 
-            
-        ]);
-
-        $this->assertDatabaseHas('users', ['name' => 'Admin User']);
-    }
-    public function testCreateUserProfile()
+    public function testUserCreate()
     {
         $user = \App\User::create([
-            'name'     => 'Admin User',
-            'email'    => 'admin@admin.com',
-            'password' =>  \bcrypt(12345) 
-           
+            "email"    => "admin@admin.com",
+            "name"     => "admin",
+            "password" => bcrypt(12345)
         ]);
-        $user_profile = \App\UserProfile::create([
-            'user_id' => $user->id,
-            'address' =>'42 Road St',
-            'state'   =>'FL',
-            'zip'     =>'3232'
+
+        $this->assertDatabaseHas('users', [
+            'email'    => $user->email,
+            'name'     => $user->name,
+            'password' => $user->password
         ]);
-        $this->assertDatabaseHas('users', ['name' => 'Admin User']);   
     }
-   
+    public function testUserProfileCreate()
+    {
+        $user = \App\User::create([
+            "email"    => "admin@admin.com",
+            "name"     => "admin",
+            "password" => bcrypt(12345)
+        ]);
+        $profile = \App\UserProfile::create ([
+            'id_user' => $user->id,
+            'address' => 'Rua teste teste',
+            'phone'   => 1434341563,
+            'whoami'  => 'Um programador muito bom que testa as coisas antes de mandar para produção'
+        ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'id_user' => $user->id,
+            'address' => 'Rua teste teste',
+            'phone'   => 1434341563,
+            'whoami'  => 'Um programador muito bom que testa as coisas antes de mandar para produção'
+        ]);
+
+    }
+
+
 
 }
